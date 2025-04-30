@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="pageWrapper">
+    <div class="pageCont">
+      <h1 class="heading">Log In</h1>
+      <form action="/auth/log-in" method="POST">
+        <div class="inputCont">
+          <label for="email">Email</label>
+          <input id="email" name="email" placeholder="e.g. user123@gmail.com" type="email" />
+        </div>
+        <div class="inputCont">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" />
+        </div>
+        <!-- Validation errors -->
+        <%- include('partials/validationErr.ejs') %>
+        <!-- Authentication error -->
+        <% if (message && message.length > 0) { %>
+          <div class="error"><%= message[0] %></div>
+        <% } %>
+        <button type="submit" class="loginFormBtn">Log In</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

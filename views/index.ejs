@@ -3,10 +3,36 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Mini Message Board</title>
+		<title>File Uploader</title>
 		<link rel="stylesheet" href="/styles.css">
 	</head>
 	<body>
-		<h1>Wlcm trvlr</h1>
+		<div class="pageWrapper">
+			<div class="pageCont">
+				<% if (locals.user) { %>
+					<div class="userWrapper">
+						<div class="userCont">
+							<h1>Hello <%= user.first_name %></h1>
+						</div>
+						<a href="/auth/log-out">
+							<button class="logoutBtn">Log out</button>
+						</a>
+						<!-- upload files button or form -->
+					</div>
+				<% } else  { %>
+					<div class="authCont">
+						<p class="loginText">Login or register to upload files!</p>
+						<div>
+							<a href="/auth/log-in">
+								<button>Log In</button>
+							</a>
+							<a href="/auth/sign-up">
+								<button>Register</button>
+							</a>
+						</div>
+					</div>
+				<% } %>
+			</div>
+		</div>
 	</body>
 </html>

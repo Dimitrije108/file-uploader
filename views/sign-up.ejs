@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="pageWrapper">
+    <div class="pageCont">
+      <h1>Sign Up</h1>
+      <form action="/auth/sign-up" method="POST">
+        <div class="inputCont">
+          <label for="firstName">First Name</label>
+          <input id="firstName" name="firstName" type="text" required />
+        </div>
+        <div class="inputCont">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" name="lastName" type="text" required />
+        </div>
+        <div class="inputCont">
+          <label for="email">Email</label>
+          <input 
+            id="email" 
+            name="email" 
+            type="email" 
+            placeholder="e.g. user123@gmail.com" 
+            required 
+          />
+        </div>
+        <div class="inputCont">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required />
+        </div>
+        <div class="inputCont">
+          <label for="confirmPass">Confirm Password</label>
+          <input id="confirmPass" name="confirmPass" type="password" required />
+        </div>
+        <label for="admin">Admin</label>
+        <input type="checkbox" id="admin" name="admin" />
+        <!-- print out errors if present -->
+        <%- include('partials/validationErr.ejs') %>
+        <button type="submit" class="registerBtn">Sign Up</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
