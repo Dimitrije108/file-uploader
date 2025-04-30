@@ -12,12 +12,8 @@
       <h1>Sign Up</h1>
       <form action="/auth/sign-up" method="POST">
         <div class="inputCont">
-          <label for="firstName">First Name</label>
-          <input id="firstName" name="firstName" type="text" required />
-        </div>
-        <div class="inputCont">
-          <label for="lastName">Last Name</label>
-          <input id="lastName" name="lastName" type="text" required />
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required />
         </div>
         <div class="inputCont">
           <label for="email">Email</label>
@@ -37,8 +33,6 @@
           <label for="confirmPass">Confirm Password</label>
           <input id="confirmPass" name="confirmPass" type="password" required />
         </div>
-        <label for="admin">Admin</label>
-        <input type="checkbox" id="admin" name="admin" />
         <!-- print out errors if present -->
         <%- include('partials/validationErr.ejs') %>
         <button type="submit" class="registerBtn">Sign Up</button>
