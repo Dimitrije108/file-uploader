@@ -37,9 +37,11 @@ model Folder {
 }
 
 model File {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   url       String
+  name      String
+  size      Int
+  uploaded  DateTime  @default(now())
   folder    Folder    @relation(fields: [folderId], references: [id])
   folderId  Int
 }
-// save metadata (e.g., filename, size, upload time) later. From Multer API
