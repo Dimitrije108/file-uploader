@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload files</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="pageWrapper">
+    <div class="pageCont">
+      <% if (locals.user) { %>
+        <h1>Upload files</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <input type="file" name="files" multiple>
+          <button type="submit">Upload</button>
+          <!-- print out errors if present -->
+          <%- include('partials/validationErr.ejs') %>
+        </form>
+      <% } else { %>
+        <h1>Only logged in users can upload files</h1>
+        <a href="/">
+          <button>Home</button>
+        </a>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
+
+
