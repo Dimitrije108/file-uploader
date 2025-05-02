@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload files</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="pageWrapper">
+    <div class="pageCont">
+			<h1><%= folder.name %></h1>
+			<!-- how do I upload to a folder here exactly? -->
+			<a href="/upload/<%= folder.id %>">
+				<button>Upload</button>
+			</a>
+			<% if (files && files.length > 0) { %>
+				<% files.forEach((file) => { %>
+					<div><%= file.name %></div>
+					<div>Size: <%= file.size %></div>
+					<div>Uploaded: <%= file.uploaded %></div>
+					<!-- Download link/button -->
+					<a href="<%= file.url %>" download>
+						<button>Download</button>
+					</a>
+				<% }) %>
+			<% } else { %>
+				<p>No uploaded files.</p>
+			<% } %>
+    </div>
+  </div>
+</body>
+</html>

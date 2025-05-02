@@ -10,16 +10,39 @@
 		<div class="pageWrapper">
 			<div class="pageCont">
 				<% if (locals.user) { %>
-					<div class="userWrapper">
-						<div class="userCont">
-							<h1>Hello <%= user.name %></h1>
-						</div>
-						<a href="/auth/log-out">
-							<button class="logoutBtn">Log out</button>
-						</a>
-						<!-- upload files button or form -->
+					<div class="userCont">
+						<h1>Hello <%= user.name %></h1>
 					</div>
-				<% } else  { %>
+					<a href="/auth/log-out">
+						<button class="logoutBtn">Log out</button>
+					</a>
+					<a href="/new">
+						<button>Create a folder</button>
+					</a>
+					<a href="/upload">
+						<button>Upload</button>
+					</a>
+					<% if (folders && folders.length > 0) { %>
+						<h2>Your folders</h2>
+						<% folders.forEach((folder) => { %>
+							<a href="/folders/<%= folder.id %>">
+								<button><%= folder.name %></button>
+							</a>
+						<% }) %>
+					<% } else { %>
+						<p>No foldiers present</p>
+					<% } %>
+					<% if (files && files.length > 0) { %>
+						<h2>Your files</h2>
+						<div><%= file.name %></div>
+						<div>Size: <%= file.size %></div>
+						<div>Uploaded: <%= file.uploaded %></div>
+						<!-- Download link/button -->
+						<a href="<%= file.url %>" download>
+							<button>Download</button>
+						</a>
+					<% } %>
+				<% } else { %>
 					<div class="authCont">
 						<p class="loginText">Login or register to upload files!</p>
 						<div>
