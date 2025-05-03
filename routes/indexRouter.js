@@ -5,7 +5,14 @@ const prisma = new PrismaClient();
 const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 // this is where the files will be stored
-const upload = multer({ dest: 'public/uploads/' });
+// TODO: delete dest once cloud is setup
+const upload = multer({ 
+	torage: multer.memoryStorage(),
+	limits: { fileSize: 10 * 1024 * 1024 } // Limit to 10MB
+});
+// Supabase cloud storage
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 const validateFolder = [
 	body('name').trim()
@@ -19,6 +26,25 @@ const checkAuthentication = (req,res,next) => {
 	} else {
 		res.redirect("/login");
 	}
+}
+
+const uploadFile = async (file, folderId) => {
+	let filepath;
+	if (folderId) {
+		filepath = `${folderId}/${file.originalname}`;
+	} else {
+		filepath = file.originalname;
+	}
+
+	const { data, error } = await supabase
+		.storage
+		.from('file-uploader')
+		.upload(filepath, file.buffer);
+	
+	if (error) {
+    return res.status(500).send(`Upload failed ${error.message}`);
+  }
+	return data;
 }
 
 indexRouter.get('/', async (req, res) => {
@@ -58,7 +84,7 @@ indexRouter.post('/new', [
 				errors: errors.array() 
 			});
 		};
-		
+
 		const userId = req.user.id;
 		const name = req.body.name;
 
@@ -98,18 +124,62 @@ indexRouter.get('/folders/:id', [
 indexRouter.get('/upload', [ 
 	checkAuthentication,
 	(req, res) => {
-		res.render('upload', {
-			user: req.user
-		});
+		res.render('upload');
 	}
 ]);
 
 indexRouter.post('/upload', [
 	checkAuthentication,
-	upload.array('files', 12), (req, res) => {
-		console.log(req.files);
+	upload.single('file'), 
+	async (req, res) => {
+		if (!req.file) {
+			return res.status(400).send('No files uploaded');
+		}
+		const file = req.file;
+		// Upload the file to the cloud
+		const cloudData = await uploadFile(file);
+		// Make a db file instance with the cloud's file URL 
+		await prisma.file.create({
+			data: {
+				path: cloudData.path,
+				name: file.originalname,
+				size: file.size
+			},
+		});
+		
 		res.redirect('/upload');
-		// we will think about folders later and how to upload into them
+	}
+]);
+
+indexRouter.get('/upload/:id', [ 
+	checkAuthentication,
+	(req, res) => {
+		res.render('upload');
+	}
+]);
+
+indexRouter.post('/upload/:id', [
+	checkAuthentication,
+	upload.single('file'), 
+	async (req, res) => {
+		if (!req.file) {
+			return res.status(400).send('No files uploaded');
+		}
+		const folderId = req.params.id;
+		const file = req.file;
+		// Upload the file to the cloud
+		const cloudData = await uploadFile(file, folderId);
+		// Make a db file instance with the cloud's file URL 
+		await prisma.file.create({
+			data: {
+				path: cloudData.path,
+				name: file.originalname,
+				size: file.size,
+				folderId
+			},
+		});
+
+		res.redirect(`/folders/${folderId}`);
 	}
 ]);
 
