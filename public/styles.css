@@ -1,3 +1,173 @@
 body {
-	color: rgb(116, 82, 82);
+	margin: 0;
+	padding: 0;
+	color: rgb(255, 255, 255);
+	background-color: rgb(137, 128, 218);
+	font-family: Arial, Verdana, Tahoma;
+}
+
+h1, h2, p {
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	margin: 4px 0;
+	padding: 6px 8px;
+
+	font-size: 1.5rem;
+	color: rgb(255, 255, 255);
+	background-color: rgb(119, 112, 199);
+	border: 2px solid rgb(255, 255, 255);
+	border-radius: 8px;
+	box-shadow: 1px 1px 0px 0px rgb(255, 255, 255);
+	transition: all 0.3s;
+
+	cursor: pointer;
+}
+
+button:hover {
+	color: rgb(139, 132, 197);
+	background-color: rgb(255, 255, 255);
+}
+
+a {
+	display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pageWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.pageCont {
+	padding: 1rem;
+}
+
+.userWrapper {
+	margin-bottom: 1rem;
+	display: flex;
+}
+
+.userCont {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.welcome {
+	margin-bottom: 1rem;
+	display: flex;
+	justify-content: center;
+}
+
+.userStatus {
+	align-self: center;
+}
+
+.authCont {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.membershipCont {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.delBtn:hover, 
+.logoutBtn:hover {
+	color: white;
+	background-color: rgb(247, 141, 190);
+}
+
+.postCont {
+	margin: 1rem 0;
+	padding: 1rem;
+	max-width: 600px;
+
+	background-color: rgb(233, 231, 215);
+	border: 1px solid rgb(0, 0, 0);
+	box-shadow: 6px 6px 0px 1px rgba(0,0,0,1);
+}
+
+.postTitle {
+	margin-bottom: 1rem;
+	font-size: 1.2rem;
+}
+
+.postText {
+	margin-bottom: 0.5rem;
+}
+
+.postAuthorWrapper {
+	margin-bottom: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.postAuthorCont {
+	display: flex;
+	align-items: center;
+}
+
+.postAuthor {
+	margin-right: 4px;
+	font-size: 1rem;
+}
+
+.postAuth {
+	font-size: 0.8rem;
+}
+
+.postDate {
+	font-size: 0.7rem;
+}
+
+.heading {
+	margin-bottom: 1rem;
+	display: flex;
+	justify-content: center;
+}
+
+.membershipForm {
+	margin-top: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.membershipForm > label {
+	font-weight: 600;
+}
+
+.membershipForm > input {
+	margin: 0.5rem;
+}
+
+.inputCont {
+	margin: 1rem 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.postBtn,
+.loginFormBtn,
+.registerBtn {
+	width: 100%;
+}
+
+.registerBtn {
+	margin-top: 1rem;
+}
+
+.loginText {
+	margin-right: 1rem;
 }
