@@ -26,6 +26,7 @@ model User {
   name      String
   password  String
   folders   Folder[]
+  files     File[]
 }
 
 model Folder {
@@ -37,11 +38,13 @@ model Folder {
 }
 
 model File {
-  id        Int       @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   path      String
   name      String
   size      Int
-  uploaded  DateTime  @default(now())
-  folder    Folder?    @relation(fields: [folderId], references: [id])
+  uploaded  DateTime    @default(now())
+  folder    Folder?     @relation(fields: [folderId], references: [id])
   folderId  Int?
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int
 }
