@@ -34,13 +34,15 @@
 					<% } %>
 					<% if (files && files.length > 0) { %>
 						<h2>Your files</h2>
-						<div><%= file.name %></div>
-						<div>Size: <%= file.size %></div>
-						<div>Uploaded: <%= file.uploaded %></div>
-						<!-- Download link/button -->
-						<a href="<%= file.url %>" download>
-							<button>Download</button>
-						</a>
+						<% files.forEach((file) => { %>
+							<div><%= file.name %></div>
+							<div>Size: <%= file.size %></div>
+							<div>Uploaded: <%= file.uploaded %></div>
+							<!-- Download link/button -->
+							<a href="/download/<%= file.id %>">
+								<button>Download</button>
+							</a>
+						<% }) %>
 					<% } %>
 				<% } else { %>
 					<div class="authCont">

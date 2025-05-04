@@ -10,7 +10,6 @@
   <div class="pageWrapper">
     <div class="pageCont">
 			<h1><%= folder.name %></h1>
-			<!-- how do I upload to a folder here exactly? -->
 			<a href="/upload/<%= folder.id %>">
 				<button>Upload</button>
 			</a>
@@ -20,13 +19,16 @@
 					<div>Size: <%= file.size %></div>
 					<div>Uploaded: <%= file.uploaded %></div>
 					<!-- Download link/button -->
-					<a href="<%= file.url %>" download>
+					<a href="/download/<%= file.id %>">
 						<button>Download</button>
 					</a>
 				<% }) %>
 			<% } else { %>
 				<p>No uploaded files.</p>
 			<% } %>
+			<a href="/">
+				<button>Home</button>
+			</a>
     </div>
   </div>
 </body>
