@@ -12,7 +12,7 @@ const upload = multer({
 });
 // Supabase cloud storage
 const { createClient } = require('@supabase/supabase-js');
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const validateFolder = [
 	body('name').trim()
@@ -42,23 +42,47 @@ const uploadFile = async (file, folderId) => {
 		.upload(filepath, file.buffer);
 	
 	if (error) {
-    return res.status(500).send(`Upload failed ${error.message}`);
+    throw new Error (`Upload failed ${error.message}`);
   }
 	return data;
 }
 
-indexRouter.get('/', async (req, res) => {
-	const folders = await prisma.folder.findMany({
-		where: {
-			userId: req.user.id,
-		}
-	});
+const downloadFile = async (path, res) => {
+	const { data, error } = await supabase
+		.storage
+		.from('file-uploader')
+		.download(path);
 
-	const files = await prisma.file.findMany({
-		where: {
-			folderId: null
-		}
-	})
+	if (error) {
+		throw new Error (`Download failed ${error.message}`);
+	}
+	const buffer = Buffer.from(await data.arrayBuffer());
+
+	res.setHeader('Content-Type', 'application/octet-stream');
+  res.setHeader('Content-Disposition', `attachment; filename="${path.split('/').pop()}"`);
+  res.send(buffer);
+}
+
+indexRouter.get('/', async (req, res) => {
+	let folders;
+	let files;
+
+	if (req.user) {
+		folders = await prisma.folder.findMany({
+			where: {
+				userId: req.user.id,
+			}
+		});
+
+		files = await prisma.file.findMany({
+			where: {
+				AND: [
+					{ folderId: null },
+					{ userId: req.user.id },
+				]
+			}
+		})
+	}
 
 	res.render('index', {
 		user: req.user,
@@ -121,40 +145,12 @@ indexRouter.get('/folders/:id', [
 	}
 ]);
 
-indexRouter.get('/upload', [ 
-	checkAuthentication,
-	(req, res) => {
-		res.render('upload');
-	}
-]);
-
-indexRouter.post('/upload', [
-	checkAuthentication,
-	upload.single('file'), 
-	async (req, res) => {
-		if (!req.file) {
-			return res.status(400).send('No files uploaded');
-		}
-		const file = req.file;
-		// Upload the file to the cloud
-		const cloudData = await uploadFile(file);
-		// Make a db file instance with the cloud's file URL 
-		await prisma.file.create({
-			data: {
-				path: cloudData.path,
-				name: file.originalname,
-				size: file.size
-			},
-		});
-		
-		res.redirect('/upload');
-	}
-]);
-
 indexRouter.get('/upload/:id', [ 
 	checkAuthentication,
 	(req, res) => {
-		res.render('upload');
+		res.render('upload', {
+			folderId: req.params.id
+		});
 	}
 ]);
 
@@ -165,7 +161,8 @@ indexRouter.post('/upload/:id', [
 		if (!req.file) {
 			return res.status(400).send('No files uploaded');
 		}
-		const folderId = req.params.id;
+		const userId = req.user.id;
+		const folderId = Number(req.params.id);
 		const file = req.file;
 		// Upload the file to the cloud
 		const cloudData = await uploadFile(file, folderId);
@@ -175,12 +172,56 @@ indexRouter.post('/upload/:id', [
 				path: cloudData.path,
 				name: file.originalname,
 				size: file.size,
-				folderId
+				folderId,
+				userId
 			},
 		});
 
 		res.redirect(`/folders/${folderId}`);
 	}
 ]);
+
+indexRouter.get('/upload', [ 
+	checkAuthentication,
+	(req, res) => {
+		res.render('upload', {
+			folderId: false
+		});
+	}
+]);
+
+indexRouter.post('/upload', [
+	checkAuthentication,
+	upload.single('file'), 
+	async (req, res) => {
+		if (!req.file) {
+			return res.status(400).send('No files uploaded');
+		}
+		const userId = req.user.id;
+		const file = req.file;
+		// Upload the file to the cloud
+		const cloudData = await uploadFile(file);
+		// Make a db file instance with the cloud's file URL 
+		await prisma.file.create({
+			data: {
+				path: cloudData.path,
+				name: file.originalname,
+				size: file.size,
+				userId,
+			},
+		});
+		
+		res.redirect('/');
+	}
+]);
+
+indexRouter.get('/download/:id', async (req, res) => {
+	const file = await prisma.file.findUnique({
+		where: {
+			id: Number(req.params.id)
+		}
+	});
+	await downloadFile(file.path, res);
+});
 
 module.exports = indexRouter;
