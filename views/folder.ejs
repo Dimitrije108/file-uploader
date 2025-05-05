@@ -13,6 +13,9 @@
 			<a href="/upload/<%= folder.id %>">
 				<button>Upload</button>
 			</a>
+			<a href="/">
+				<button>Home</button>
+			</a>
 			<% if (files && files.length > 0) { %>
 				<% files.forEach((file) => { %>
 					<div><%= file.name %></div>
@@ -26,9 +29,6 @@
 			<% } else { %>
 				<p>No uploaded files.</p>
 			<% } %>
-			<a href="/">
-				<button>Home</button>
-			</a>
     </div>
   </div>
 </body>
